@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capacitación Docente - Autismo & IA | Puerto Rico</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React y ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel Standalone para JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // Componentes de iconos usando lucide
+        const BookOpen = (props) => <i data-lucide="book-open" {...props}></i>;
+        const Brain = (props) => <i data-lucide="brain" {...props}></i>;
+        const Sparkles = (props) => <i data-lucide="sparkles" {...props}></i>;
+        const Scale = (props) => <i data-lucide="scale" {...props}></i>;
+        const Gamepad2 = (props) => <i data-lucide="gamepad-2" {...props}></i>;
+        const Lightbulb = (props) => <i data-lucide="lightbulb" {...props}></i>;
+        const CheckCircle = (props) => <i data-lucide="check-circle" {...props}></i>;
+        const Award = (props) => <i data-lucide="award" {...props}></i>;
+        const Users = (props) => <i data-lucide="users" {...props}></i>;
+        const Target = (props) => <i data-lucide="target" {...props}></i>;
+        const Heart = (props) => <i data-lucide="heart" {...props}></i>;
+        const Star = (props) => <i data-lucide="star" {...props}></i>;
+        const Zap = (props) => <i data-lucide="zap" {...props}></i>;
+        const Trophy = (props) => <i data-lucide="trophy" {...props}></i>;
+        const Play = (props) => <i data-lucide="play" {...props}></i>;
+        const ChevronRight = (props) => <i data-lucide="chevron-right" {...props}></i>;
+
+        const CapacitacionDocenteAutismo = () => {
+            const [activeSection, setActiveSection] = useState('inicio');
+            const [gameScore, setGameScore] = useState(0);
+            const [quizAnswers, setQuizAnswers] = useState({});
+            const [showResults, setShowResults] = useState(false);
+            const [completedActivities, setCompletedActivities] = useState([]);
+
+            React.useEffect(() => {
+                lucide.createIcons();
+            });
+
+            // Secciones del menú
+            const sections = [
+                { id: 'inicio', name: 'Inicio', icon: 'heart', color: 'text-pink-500' },
+                { id: 'autismo', name: 'Comprendiendo el Autismo', icon: 'brain', color: 'text-purple-500' },
+                { id: 'leyes', name: 'Leyes de PR', icon: 'scale', color: 'text-blue-500' },
+                { id: 'estrategias', name: 'Estrategias Diferenciadas', icon: 'target', color: 'text-green-500' },
+                { id: 'ia', name: 'IA en Educación', icon: 'sparkles', color: 'text-yellow-500' },
+                { id: 'juegos', name: 'Juegos Interactivos', icon: 'gamepad-2', color: 'text-pink-500' },
+                { id: 'practica', name: 'Aplica en tu Clase', icon: 'lightbulb', color: 'text-teal-500' }
+            ];
+
+            // Preguntas del quiz
+            const quizQuestions = [
+                {
+                    id: 1,
+                    question: "¿Cuál es la ley más reciente de Puerto Rico sobre autismo?",
+                    options: [
+                        "Ley 103 de 2004",
+                        "Ley 220 de 2012 (BIDA)",
+                        "Ley 163 de 2024",
+                        "Ley 51 de 1996"
+                    ],
+                    correct: 2,
+                    explanation: "La Ley 163 de 2024 es la más reciente y establece protección integral para personas con TEA."
+                },
+                {
+                    id: 2,
+                    question: "¿Qué significa enseñanza diferenciada?",
+                    options: [
+                        "Enseñar lo mismo a todos de diferentes formas",
+                        "Adaptar el contenido, proceso y producto según las necesidades de cada estudiante",
+                        "Separar a los estudiantes por nivel",
+                        "Usar solo tecnología en clase"
+                    ],
+                    correct: 1,
+                    explanation: "La enseñanza diferenciada adapta contenido, proceso y producto según cada estudiante."
+                },
+                {
+                    id: 3,
+                    question: "¿Cuál es una característica común del TEA?",
+                    options: [
+                        "Problemas exclusivamente motores",
+                        "Dificultades en comunicación e interacción social",
+                        "Falta de inteligencia",
+                        "Incapacidad para aprender"
+                    ],
+                    correct: 1,
+                    explanation: "Los estudiantes con TEA pueden tener dificultades en comunicación e interacción social, pero tienen capacidades únicas de aprendizaje."
+                }
+            ];
+
+            // Estrategias prácticas
+            const estrategias = [
+                {
+                    titulo: "Apoyos Visuales",
+                    descripcion: "Usa pictogramas, horarios visuales y agendas con imágenes",
+                    ejemplo: "Crea un horario diario con fotos de cada actividad",
+                    color: "bg-purple-50 border-purple-200",
+                    icon: "📊"
+                },
+                {
+                    titulo: "Rutinas Estructuradas",
+                    descripcion: "Mantén consistencia y predecibilidad en las actividades",
+                    ejemplo: "Sigue la misma secuencia cada día: saludo → calendario → actividad",
+                    color: "bg-pink-50 border-pink-200",
+                    icon: "⏰"
+                },
+                {
+                    titulo: "Enseñanza Multisensorial",
+                    descripcion: "Integra visual, auditivo y kinestésico",
+                    ejemplo: "Enseña las letras con arena, canciones y tarjetas coloridas",
+                    color: "bg-blue-50 border-blue-200",
+                    icon: "🎨"
+                },
+                {
+                    titulo: "Comunicación Alternativa",
+                    descripcion: "PECS, tablets con pictogramas, lenguaje de señas",
+                    ejemplo: "Usa una tablet con app de comunicación para expresar necesidades",
+                    color: "bg-green-50 border-green-200",
+                    icon: "💬"
+                },
+                {
+                    titulo: "Refuerzo Positivo",
+                    descripcion: "Celebra logros y esfuerzos inmediatamente",
+                    ejemplo: "Sistema de recompensas visuales con estrellas o caritas felices",
+                    color: "bg-yellow-50 border-yellow-200",
+                    icon: "⭐"
+                },
+                {
+                    titulo: "Espacios Sensoriales",
+                    descripcion: "Crea áreas tranquilas para autorregulación",
+                    ejemplo: "Rincón con cojines, luces tenues y objetos sensoriales",
+                    color: "bg-teal-50 border-teal-200",
+                    icon: "🧘"
+                }
+            ];
+
+            // Herramientas de IA
+            const herramientasIA = [
+                {
+                    nombre: "Proloquo2Go",
+                    uso: "Comunicación aumentativa con IA",
+                    beneficio: "Ayuda a estudiantes no verbales a expresarse"
+                },
+                {
+                    nombre: "Time Timer",
+                    uso: "Gestión visual del tiempo",
+                    beneficio: "Mejora la comprensión temporal y reduce ansiedad"
+                },
+                {
+                    nombre: "Autism Apps",
+                    uso: "Colección de apps especializadas",
+                    beneficio: "Desde habilidades sociales hasta comunicación"
+                },
+                {
+                    nombre: "CoSpaces / Merge Cube",
+                    uso: "Realidad aumentada para aprendizaje",
+                    beneficio: "Experiencias 3D interactivas"
+                },
+                {
+                    nombre: "ChatGPT / Claude",
+                    uso: "Crear materiales personalizados",
+                    beneficio: "Genera historias sociales, actividades adaptadas"
+                },
+                {
+                    nombre: "Cogmed",
+                    uso: "Entrenamiento de memoria de trabajo",
+                    beneficio: "Fortalece concentración y procesamiento"
+                }
+            ];
+
+            const handleQuizAnswer = (questionId, answerIndex) => {
+                setQuizAnswers(prev => ({
+                    ...prev,
+                    [questionId]: answerIndex
+                }));
+            };
+
+            const calculateScore = () => {
+                let correct = 0;
+                quizQuestions.forEach(q => {
+                    if (quizAnswers[q.id] === q.correct) correct++;
+                });
+                return correct;
+            };
+
+            const submitQuiz = () => {
+                setShowResults(true);
+                const score = calculateScore();
+                setGameScore(score);
+                if (score >= 2) {
+                    setCompletedActivities(prev => [...prev, 'quiz']);
+                }
+            };
+
+            const markActivityComplete = (activityName) => {
+                if (!completedActivities.includes(activityName)) {
+                    setCompletedActivities(prev => [...prev, activityName]);
+                }
+            };
+
+            // Renderizar contenido según sección activa
+            const renderContent = () => {
+                switch(activeSection) {
+                    case 'inicio':
+                        return (
+                            <div className="space-y-6">
+                                <div className="bg-gradient-to-r from-purple-100 via-pink-100 to-blue-100 rounded-2xl p-8 text-center">
+                                    <i data-lucide="heart" className="w-16 h-16 mx-auto mb-4 text-pink-500"></i>
+                                    <h2 className="text-3xl font-bold text-gray-800 mb-4">
+                                        ¡Bienvenido/a Maestro/a! 🎓
+                                    </h2>
+                                    <p className="text-lg text-gray-700 mb-4">
+                                        Esta capacitación interactiva te preparará para maximizar el potencial de cada estudiante con autismo
+                                    </p>
+                                    <div className="flex justify-center gap-4 flex-wrap mt-6">
+                                        <div className="bg-white rounded-xl p-4 shadow-md">
+                                            <i data-lucide="brain" className="w-8 h-8 mx-auto mb-2 text-purple-500"></i>
+                                            <p className="font-semibold">Aprende</p>
+                                        </div>
+                                        <div className="bg-white rounded-xl p-4 shadow-md">
+                                            <i data-lucide="gamepad-2" className="w-8 h-8 mx-auto mb-2 text-pink-500"></i>
+                                            <p className="font-semibold">Juega</p>
+                                        </div>
+                                        <div className="bg-white rounded-xl p-4 shadow-md">
+                                            <i data-lucide="lightbulb" className="w-8 h-8 mx-auto mb-2 text-yellow-500"></i>
+                                            <p className="font-semibold">Aplica</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    <div className="bg-purple-50 rounded-xl p-6 border-2 border-purple-200">
+                                        <h3 className="text-xl font-bold mb-3 text-purple-700">📚 Lo que aprenderás</h3>
+                                        <ul className="space-y-2">
+                                            <li className="flex items-start gap-2">
+                                                <i data-lucide="check-circle" className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5"></i>
+                                                <span>Comprender el Trastorno del Espectro Autista</span>
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <i data-lucide="check-circle" className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5"></i>
+                                                <span>Leyes de Puerto Rico (Ley 163-2024, Ley BIDA)</span>
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <i data-lucide="check-circle" className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5"></i>
+                                                <span>Estrategias de enseñanza diferenciada</span>
+                                            </li>
+                                            <li className="flex items-start gap-2">
+                                                <i data-lucide="check-circle" className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5"></i>
+                                                <span>Herramientas de IA para educación especial</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div className="bg-pink-50 rounded-xl p-6 border-2 border-pink-200">
+                                        <h3 className="text-xl font-bold mb-3 text-pink-700">🎯 Tu progreso</h3>
+                                        <div className="space-y-3">
+                                            <div>
+                                                <div className="flex justify-between mb-1">
+                                                    <span className="text-sm font-medium">Actividades completadas</span>
+                                                    <span className="text-sm font-medium">{completedActivities.length}/7</span>
+                                                </div>
+                                                <div className="w-full bg-gray-200 rounded-full h-3">
+                                                    <div 
+                                                        className="bg-pink-500 h-3 rounded-full transition-all duration-300"
+                                                        style={{ width: `${(completedActivities.length / 7) * 100}%` }}
+                                                    />
+                                                </div>
+                                            </div>
+                                            {completedActivities.length > 0 && (
+                                                <div className="flex flex-wrap gap-2 mt-3">
+                                                    {completedActivities.map((activity, idx) => (
+                                                        <span key={idx} className="bg-white px-3 py-1 rounded-full text-xs flex items-center gap-1">
+                                                            <i data-lucide="trophy" className="w-3 h-3 text-yellow-500"></i>
+                                                            {activity}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-blue-50 rounded-xl p-6 border-2 border-blue-200">
+                                    <h3 className="text-xl font-bold mb-4 text-blue-700">🚀 Comienza tu viaje</h3>
+                                    <p className="mb-4 text-gray-700">
+                                        Explora cada sección del menú lateral para una experiencia completa de aprendizaje.
+                                        ¡No olvides completar los juegos interactivos!
+                                    </p>
+                                    <button
+                                        onClick={() => setActiveSection('autismo')}
+                                        className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors"
+                                    >
+                                        Empezar ahora <i data-lucide="chevron-right" className="w-5 h-5"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        );
+
+                    case 'autismo':
+                        return (
+                            <div className="space-y-6">
+                                <div className="bg-gradient-to-r from-purple-100 to-purple-50 rounded-2xl p-8">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <i data-lucide="brain" className="w-12 h-12 text-purple-600"></i>
+                                        <h2 className="text-3xl font-bold text-gray-800">
+                                            Comprendiendo el Autismo (TEA)
+                                        </h2>
+                                    </div>
+                                    <p className="text-lg text-gray-700">
+                                        El Trastorno del Espectro Autista es una condición del neurodesarrollo que afecta 
+                                        la comunicación, interacción social y presenta patrones de comportamiento específicos.
+                                    </p>
+                                </div>
+
+                                <div className="grid md:grid-cols-3 gap-4">
+                                    <div className="bg-purple-50 rounded-xl p-6 border-2 border-purple-200">
+                                        <div className="text-4xl mb-3">👥</div>
+                                        <h3 className="font-bold text-lg mb-2 text-purple-700">Interacción Social</h3>
+                                        <p className="text-gray-700">Dificultades para interpretar señales sociales, contacto visual y reciprocidad emocional</p>
+                                    </div>
+
+                                    <div className="bg-pink-50 rounded-xl p-6 border-2 border-pink-200">
+                                        <div className="text-4xl mb-3">💬</div>
+                                        <h3 className="font-bold text-lg mb-2 text-pink-700">Comunicación</h3>
+                                        <p className="text-gray-700">Retrasos en el lenguaje, comunicación literal, ecolalia o comunicación no verbal</p>
+                                    </div>
+
+                                    <div className="bg-blue-50 rounded-xl p-6 border-2 border-blue-200">
+                                        <div className="text-4xl mb-3">🔄</div>
+                                        <h3 className="font-bold text-lg mb-2 text-blue-700">Patrones Repetitivos</h3>
+                                        <p className="text-gray-700">Rutinas rígidas, intereses intensos, movimientos estereotipados, sensibilidad sensorial</p>
+                                    </div>
+                                </div>
+
+                                <div className="bg-green-50 rounded-xl p-6 border-2 border-green-200">
+                                    <h3 className="text-xl font-bold mb-4 text-green-700 flex items-center gap-2">
+                                        <i data-lucide="star" className="w-6 h-6"></i>
+                                        Fortalezas Únicas del Estudiante con Autismo
+                                    </h3>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        <div className="flex items-start gap-3">
+                                            <div className="text-2xl">🎯</div>
+                                            <div>
+                                                <p className="font-semibold">Atención al Detalle</p>
+                                                <p className="text-sm text-gray-600">Capacidad excepcional para notar patrones y detalles</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <div className="text-2xl">🧠</div>
+                                            <div>
+                                                <p className="font-semibold">Memoria Visual</p>
+                                                <p className="text-sm text-gray-600">Excelente retención de información visual</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <div className="text-2xl">🎨</div>
+                                            <div>
+                                                <p className="font-semibold">Pensamiento Único</p>
+                                                <p className="text-sm text-gray-600">Perspectivas creativas y originales</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <div className="text-2xl">📚</div>
+                                            <div>
+                                                <p className="font-semibold">Conocimiento Profundo</p>
+                                                <p className="text-sm text-gray-600">Expertos en áreas de interés especial</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-yellow-50 rounded-xl p-6 border-2 border-yellow-200">
+                                    <h3 className="text-xl font-bold mb-3 text-yellow-700">💡 Datos importantes en PR</h3>
+                                    <ul className="space-y-2">
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-yellow-600">•</span>
+                                            <span>Aproximadamente 28,745 personas con autismo en Puerto Rico</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-yellow-600">•</span>
+                                            <span>1 de cada 62 bebés nacidos tiene alta posibilidad de desarrollar TEA</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-yellow-600">•</span>
+                                            <span>Puerto Rico tiene una de las tasas más altas del mundo</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-yellow-600">•</span>
+                                            <span>La detección e intervención temprana mejoran significativamente el desarrollo</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <button
+                                    onClick={() => markActivityComplete('autismo-completo')}
+                                    className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-semibold transition-colors"
+                                >
+                                    Marcar sección como completada ✓
+                                </button>
+                            </div>
+                        );
+
+                    case 'leyes':
+                        return (
+                            <div className="space-y-6">
+                                <div className="bg-gradient-to-r from-blue-100 to-blue-50 rounded-2xl p-8">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <i data-lucide="scale" className="w-12 h-12 text-blue-600"></i>
+                                        <h2 className="text-3xl font-bold text-gray-800">
+                                            Leyes de Puerto Rico sobre Autismo
+                                        </h2>
+                                    </div>
+                                    <p className="text-lg text-gray-700">
+                                        Conoce el marco legal que protege los derechos de estudiantes con autismo en PR
+                                    </p>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="bg-blue-50 rounded-xl p-6 border-2 border-blue-200">
+                                        <div className="flex items-start gap-4">
+                                            <div className="bg-blue-500 text-white rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 font-bold text-lg">
+                                                1
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-xl font-bold mb-2 text-blue-700">
+                                                    Ley 163 de 2024 (LA MÁS RECIENTE)
+                                                </h3>
+                                                <p className="font-semibold mb-2">
+                                                    "Ley para la Protección, Seguridad, Integración, Bienestar y Desarrollo Integral de las Personas con TEA"
+                                                </p>
+                                                <div className="space-y-2 mt-3">
+                                                    <div className="flex items-start gap-2">
+                                                        <i data-lucide="check-circle" className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5"></i>
+                                                        <span>Establece política pública integral</span>
+                                                    </div>
+                                                    <div className="flex items-start gap-2">
+                                                        <i data-lucide="check-circle" className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5"></i>
+                                                        <span>Garantiza Programa Educativo Individualizado (PEI)</span>
+                                                    </div>
+                                                    <div className="flex items-start gap-2">
+                                                        <i data-lucide="check-circle" className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5"></i>
+                                                        <span>Programas especializados con prácticas basadas en evidencia</span>
+                                                    </div>
+                                                    <div className="flex items-start gap-2">
+                                                        <i data-lucide="check-circle" className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5"></i>
+                                                        <span>Meta de inclusión paulatina en salón regular</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-pink-50 rounded-xl p-6 border-2 border-pink-200">
+                                        <div className="flex items-start gap-4">
+                                            <div className="bg-pink-500 text-white rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 font-bold text-lg">
+                                                2
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-xl font-bold mb-2 text-pink-700">
+                                                    Ley 220 de 2012 - LEY BIDA
+                                                </h3>
+                                                <p className="font-semibold mb-2">
+                                                    "Ley para el Bienestar, Integración y Desarrollo de las personas con Autismo"
+                                                </p>
+                                                <div className="space-y-2 mt-3">
+                                                    <div className="flex items-start gap-2">
+                                                        <i data-lucide="check-circle" className="w-5 h-5 text-pink-500 flex-shrink-0 mt-0.5"></i>
+                                                        <span>Identificación y diagnóstico temprano</span>
+                                                    </div>
+                                                    <div className="flex items-start gap-2">
+                                                        <i data-lucide="check-circle" className="w-5 h-5 text-pink-500 flex-shrink-0 mt-0.5"></i>
+                                                        <span>Programa de Apoyo a la Familia</span>
+                                                    </div>
+                                                    <div className="flex items-start gap-2">
+                                                        <i data-lucide="check-circle" className="w-5 h-5 text-pink-500 flex-shrink-0 mt-0.5"></i>
+                                                        <span>Educación continua para profesionales</span>
+                                                    </div>
+                                                    <div className="flex items-start gap-2">
+                                                        <i data-lucide="check-circle" className="w-5 h-5 text-pink-500 flex-shrink-0 mt-0.5"></i>
+                                                        <span>Cubierta médica mandatoria</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-green-50 rounded-xl p-6 border-2 border-green-200">
+                                        <div className="flex items-start gap-4">
+                                            <div className="bg-green-500 text-white rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 font-bold text-lg">
+                                                3
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-xl font-bold mb-2 text-green-700">
+                                                    Ley 51 de 1996
+                                                </h3>
+                                                <p className="font-semibold mb-2">
+                                                    "Ley de Servicios Integrales para Personas con Impedimentos"
+                                                </p>
+                                                <div className="space-y-2 mt-3">
+                                                    <div className="flex items-start gap-2">
+                                                        <i data-lucide="check-circle" className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i>
+                                                        <span>Garantiza servicios educativos integrales</span>
+                                                    </div>
+                                                    <div className="flex items-start gap-2">
+                                                        <i data-lucide="check-circle" className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i>
+                                                        <span>Deroga la Ley 21 de 1977</span>
+                                                    </div>
+                                                    <div className="flex items-start gap-2">
+                                                        <i data-lucide="check-circle" className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i>
+                                                        <span>Crea la Secretaría Auxiliar de Servicios Educativos</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="bg-purple-50 rounded-xl p-6 border-2 border-purple-200">
+                                        <div className="flex items-start gap-4">
+                                            <div className="bg-purple-500 text-white rounded-full w-12 h-12 flex items-center justify-center flex-shrink-0 font-bold text-lg">
+                                                4
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-xl font-bold mb-2 text-purple-700">
+                                                    Ley 103 de 2004
+                                                </h3>
+                                                <p className="font-semibold mb-2">
+                                                    "Carta de los Derechos de los Niños y Adultos con el Síndrome de Autismo"
+                                                </p>
+                                                <div className="space-y-2 mt-3">
+                                                    <div className="flex items-start gap-2">
+                                                        <i data-lucide="check-circle" className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5"></i>
+                                                        <span>Derecho a educación apropiada</span>
+                                                    </div>
+                                                    <div className="flex items-start gap-2">
+                                                        <i data-lucide="check-circle" className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5"></i>
+                                                        <span>Tratamiento con respeto y dignidad</span>
+                                                    </div>
+                                                    <div className="flex items-start gap-2">
+                                                        <i data-lucide="check-circle" className="w-5 h-5 text-purple-500 flex-shrink-0 mt-0.5"></i>
+                                                        <span>Protección contra maltrato y negligencia</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-yellow-50 rounded-xl p-6 border-2 border-yellow-200">
+                                    <h3 className="text-xl font-bold mb-3 text-yellow-700 flex items-center gap-2">
+                                        <i data-lucide="lightbulb" className="w-6 h-6"></i>
+                                        ¿Qué significa esto para ti como docente?
+                                    </h3>
+                                    <ul className="space-y-2">
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-yellow-600 font-bold">→</span>
+                                            <span>Debes crear un PEI adaptado a cada estudiante con autismo</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-yellow-600 font-bold">→</span>
+                                            <span>Usar prácticas basadas en evidencia científica</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-yellow-600 font-bold">→</span>
+                                            <span>Trabajar hacia la inclusión en el salón regular</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-yellow-600 font-bold">→</span>
+                                            <span>Colaborar con profesionales especializados</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-yellow-600 font-bold">→</span>
+                                            <span>Respetar los derechos del estudiante y su familia</span>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <button
+                                    onClick={() => markActivityComplete('leyes-completo')}
+                                    className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg font-semibold transition-colors"
+                                >
+                                    Marcar sección como completada ✓
+                                </button>
+                            </div>
+                        );
+
+                    case 'estrategias':
+                        return (
+                            <div className="space-y-6">
+                                <div className="bg-gradient-to-r from-green-100 to-green-50 rounded-2xl p-8">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <i data-lucide="target" className="w-12 h-12 text-green-600"></i>
+                                        <h2 className="text-3xl font-bold text-gray-800">
+                                            Estrategias de Enseñanza Diferenciada
+                                        </h2>
+                                    </div>
+                                    <p className="text-lg text-gray-700">
+                                        Métodos prácticos y basados en evidencia para maximizar el aprendizaje
+                                    </p>
+                                </div>
+
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    {estrategias.map((estrategia, idx) => (
+                                        <div key={idx} className={`${estrategia.color} rounded-xl p-6 border-2`}>
+                                            <div className="flex items-start gap-3 mb-3">
+                                                <div className="text-3xl">{estrategia.icon}</div>
+                                                <div className="flex-1">
+                                                    <h3 className="text-xl font-bold mb-2">{estrategia.titulo}</h3>
+                                                    <p className="text-gray-700 mb-3">{estrategia.descripcion}</p>
+                                                    <div className="bg-white rounded-lg p-3 mt-2">
+                                                        <p className="text-sm font-semibold text-gray-600 mb-1">💡 Ejemplo práctico:</p>
+                                                        <p className="text-sm text-gray-700">{estrategia.ejemplo}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="bg-teal-50 rounded-xl p-6 border-2 border-teal-200">
+                                    <h3 className="text-xl font-bold mb-4 text-teal-700">📋 Principios Clave de Diferenciación</h3>
+                                    <div className="grid md:grid-cols-3 gap-4">
+                                        <div className="bg-white rounded-lg p-4">
+                                            <div className="text-2xl mb-2">📚</div>
+                                            <h4 className="font-bold mb-2">Contenido</h4>
+                                            <p className="text-sm text-gray-600">Qué enseñas - Adapta temas, niveles de complejidad y modalidades</p>
+                                        </div>
+                                        <div className="bg-white rounded-lg p-4">
+                                            <div className="text-2xl mb-2">🎯</div>
+                                            <h4 className="font-bold mb-2">Proceso</h4>
+                                            <p className="text-sm text-gray-600">Cómo enseñas - Varía actividades, agrupaciones y tiempos</p>
+                                        </div>
+                                        <div className="bg-white rounded-lg p-4">
+                                            <div className="text-2xl mb-2">🏆</div>
+                                            <h4 className="font-bold mb-2">Producto</h4>
+                                            <p className="text-sm text-gray-600">Cómo demuestran - Ofrece opciones de evaluación alternativas</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-blue-50 rounded-xl p-6 border-2 border-blue-200">
+                                    <h3 className="text-xl font-bold mb-4 text-blue-700">🎨 Métodos Específicos para Autismo</h3>
+                                    <div className="space-y-3">
+                                        <div className="bg-white rounded-lg p-4">
+                                            <h4 className="font-bold mb-2">🏗️ TEACCH (Treatment and Education of Autistic and related Communication-handicapped Children)</h4>
+                                            <p className="text-sm text-gray-700">Enseñanza estructurada con organización física, horarios, sistemas de trabajo y rutinas visuales</p>
+                                        </div>
+                                        <div className="bg-white rounded-lg p-4">
+                                            <h4 className="font-bold mb-2">🎯 ABA (Applied Behavior Analysis)</h4>
+                                            <p className="text-sm text-gray-700">Análisis conductual aplicado con refuerzo positivo, descomposición de tareas y enseñanza sistemática</p>
+                                        </div>
+                                        <div className="bg-white rounded-lg p-4">
+                                            <h4 className="font-bold mb-2">📱 PECS (Picture Exchange Communication System)</h4>
+                                            <p className="text-sm text-gray-700">Sistema de comunicación por intercambio de imágenes para desarrollar comunicación funcional</p>
+                                        </div>
+                                        <div className="bg-white rounded-lg p-4">
+                                            <h4 className="font-bold mb-2">📖 Historias Sociales</h4>
+                                            <p className="text-sm text-gray-700">Narrativas cortas con imágenes que enseñan situaciones sociales y comportamientos apropiados</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={() => markActivityComplete('estrategias-completo')}
+                                    className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition-colors"
+                                >
+                                    Marcar sección como completada ✓
+                                </button>
+                            </div>
+                        );
+
+                    case 'ia':
+                        return (
+                            <div className="space-y-6">
+                                <div className="bg-gradient-to-r from-yellow-100 to-yellow-50 rounded-2xl p-8">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <i data-lucide="sparkles" className="w-12 h-12 text-yellow-600"></i>
+                                        <h2 className="text-3xl font-bold text-gray-800">
+                                            Inteligencia Artificial en Educación Especial
+                                        </h2>
+                                    </div>
+                                    <p className="text-lg text-gray-700">
+                                        Herramientas tecnológicas de vanguardia para potenciar el aprendizaje
+                                    </p>
+                                </div>
+
+                                <div className="grid md:grid-cols-2 gap-4">
+                                    {herramientasIA.map((herramienta, idx) => (
+                                        <div key={idx} className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border-2 border-purple-200">
+                                            <div className="flex items-start gap-3">
+                                                <i data-lucide="sparkles" className="w-8 h-8 text-yellow-500 flex-shrink-0"></i>
+                                                <div className="flex-1">
+                                                    <h3 className="text-lg font-bold mb-2 text-purple-700">{herramienta.nombre}</h3>
+                                                    <p className="text-sm text-gray-700 mb-2">
+                                                        <span className="font-semibold">Uso:</span> {herramienta.uso}
+                                                    </p>
+                                                    <div className="bg-white rounded-lg p-3 mt-2">
+                                                        <p className="text-sm">
+                                                            <span className="font-semibold text-green-600">✓ Beneficio:</span> {herramienta.beneficio}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="bg-blue-50 rounded-xl p-6 border-2 border-blue-200">
+                                    <h3 className="text-xl font-bold mb-4 text-blue-700">🤖 Cómo usar ChatGPT/Claude en tu clase</h3>
+                                    <div className="space-y-3">
+                                        <div className="bg-white rounded-lg p-4">
+                                            <h4 className="font-bold mb-2">1️⃣ Crear Historias Sociales Personalizadas</h4>
+                                            <p className="text-sm text-gray-700 mb-2">Ejemplo de prompt:</p>
+                                            <div className="bg-gray-100 rounded p-3 text-sm font-mono">
+                                                "Crea una historia social de 5 oraciones con imágenes descriptivas sobre cómo pedir ayuda en clase, para un niño de 7 años con autismo"
+                                            </div>
+                                        </div>
+                                        <div className="bg-white rounded-lg p-4">
+                                            <h4 className="font-bold mb-2">2️⃣ Adaptar Materiales Educativos</h4>
+                                            <p className="text-sm text-gray-700 mb-2">Ejemplo de prompt:</p>
+                                            <div className="bg-gray-100 rounded p-3 text-sm font-mono">
+                                                "Simplifica este texto sobre el ciclo del agua usando oraciones cortas, viñetas y vocabulario concreto para un estudiante con autismo nivel 1"
+                                            </div>
+                                        </div>
+                                        <div className="bg-white rounded-lg p-4">
+                                            <h4 className="font-bold mb-2">3️⃣ Generar Horarios Visuales</h4>
+                                            <p className="text-sm text-gray-700 mb-2">Ejemplo de prompt:</p>
+                                            <div className="bg-gray-100 rounded p-3 text-sm font-mono">
+                                                "Diseña un horario visual diario para educación especial con pictogramas y pasos secuenciales de 8:00 AM a 2:00 PM"
+                                            </div>
+                                        </div>
+                                        <div className="bg-white rounded-lg p-4">
+                                            <h4 className="font-bold mb-2">4️⃣ Crear Actividades Sensoriales</h4>
+                                            <p className="text-sm text-gray-700 mb-2">Ejemplo de prompt:</p>
+                                            <div className="bg-gray-100 rounded p-3 text-sm font-mono">
+                                                "Sugiere 5 actividades multisensoriales para enseñar las letras del alfabeto a estudiantes con autismo, incluyendo materiales y pasos"
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-green-50 rounded-xl p-6 border-2 border-green-200">
+                                    <h3 className="text-xl font-bold mb-4 text-green-700">🎮 Tecnologías Emergentes</h3>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        <div className="bg-white rounded-lg p-4">
+                                            <div className="text-3xl mb-2">🥽</div>
+                                            <h4 className="font-bold mb-2">Realidad Virtual/Aumentada</h4>
+                                            <p className="text-sm text-gray-700">CoSpaces, Merge Cube, Meta Quest 2 para experiencias inmersivas de aprendizaje</p>
+                                        </div>
+                                        <div className="bg-white rounded-lg p-4">
+                                            <div className="text-3xl mb-2">🤖</div>
+                                            <h4 className="font-bold mb-2">Robots Sociales</h4>
+                                            <p className="text-sm text-gray-700">Interacción predecible para practicar habilidades sociales</p>
+                                        </div>
+                                        <div className="bg-white rounded-lg p-4">
+                                            <div className="text-3xl mb-2">📱</div>
+                                            <h4 className="font-bold mb-2">Apps Adaptativas</h4>
+                                            <p className="text-sm text-gray-700">Contenido que se ajusta según el progreso del estudiante</p>
+                                        </div>
+                                        <div className="bg-white rounded-lg p-4">
+                                            <div className="text-3xl mb-2">🎧</div>
+                                            <h4 className="font-bold mb-2">Cancelación de Ruido IA</h4>
+                                            <p className="text-sm text-gray-700">Apps que filtran sonidos molestos para sensibilidad sensorial</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button
+                                    onClick={() => markActivityComplete('ia-completo')}
+                                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-3 rounded-lg font-semibold transition-colors"
+                                >
+                                    Marcar sección como completada ✓
+                                </button>
+                            </div>
+                        );
+
+                    case 'juegos':
+                        return (
+                            <div className="space-y-6">
+                                <div className="bg-gradient-to-r from-pink-100 to-pink-50 rounded-2xl p-8">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <i data-lucide="gamepad-2" className="w-12 h-12 text-pink-600"></i>
+                                        <h2 className="text-3xl font-bold text-gray-800">
+                                            Juegos Interactivos - ¡Pon a prueba tu conocimiento!
+                                        </h2>
+                                    </div>
+                                    <p className="text-lg text-gray-700">
+                                        Aprende jugando y gana puntos por cada respuesta correcta
+                                    </p>
+                                </div>
+
+                                {/* Quiz Section */}
+                                <div className="bg-purple-50 rounded-xl p-6 border-2 border-purple-200">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <h3 className="text-2xl font-bold text-purple-700">📝 Quiz de Conocimientos</h3>
+                                        {showResults && (
+                                            <div className="bg-white rounded-full px-6 py-2 flex items-center gap-2">
+                                                <i data-lucide="trophy" className="w-6 h-6 text-yellow-500"></i>
+                                                <span className="font-bold text-lg">{gameScore}/{quizQuestions.length}</span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {!showResults ? (
+                                        <div className="space-y-6">
+                                            {quizQuestions.map((q) => (
+                                                <div key={q.id} className="bg-white rounded-xl p-6 shadow-md">
+                                                    <h4 className="font-bold text-lg mb-4 text-gray-800">
+                                                        {q.id}. {q.question}
+                                                    </h4>
+                                                    <div className="space-y-2">
+                                                        {q.options.map((option, idx) => (
+                                                            <button
+                                                                key={idx}
+                                                                onClick={() => handleQuizAnswer(q.id, idx)}
+                                                                className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
+                                                                    quizAnswers[q.id] === idx
+                                                                        ? 'bg-purple-100 border-purple-500'
+                                                                        : 'bg-gray-50 border-gray-200 hover:border-purple-300'
+                                                                }`}
+                                                            >
+                                                                <span className="font-semibold mr-2">{String.fromCharCode(65 + idx)}.</span>
+                                                                {option}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                            <button
+                                                onClick={submitQuiz}
+                                                disabled={Object.keys(quizAnswers).length < quizQuestions.length}
+                                                className={`w-full py-4 rounded-lg font-bold text-lg transition-all ${
+                                                    Object.keys(quizAnswers).length < quizQuestions.length
+                                                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                                        : 'bg-purple-500 hover:bg-purple-600 text-white'
+                                                }`}
+                                            >
+                                                {Object.keys(quizAnswers).length < quizQuestions.length
+                                                    ? `Responde todas las preguntas (${Object.keys(quizAnswers).length}/${quizQuestions.length})`
+                                                    : 'Ver Resultados 🎉'}
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-4">
+                                            <div className="text-center py-8">
+                                                <div className="text-6xl mb-4">
+                                                    {gameScore === quizQuestions.length ? '🏆' : gameScore >= 2 ? '⭐' : '📚'}
+                                                </div>
+                                                <h4 className="text-3xl font-bold mb-2">
+                                                    {gameScore === quizQuestions.length
+                                                        ? '¡Perfecto!'
+                                                        : gameScore >= 2
+                                                        ? '¡Muy bien!'
+                                                        : '¡Sigue practicando!'}
+                                                </h4>
+                                                <p className="text-xl text-gray-700">
+                                                    Obtuviste {gameScore} de {quizQuestions.length} respuestas correctas
+                                                </p>
+                                            </div>
+
+                                            {quizQuestions.map((q) => (
+                                                <div key={q.id} className={`bg-white rounded-xl p-6 border-2 ${
+                                                    quizAnswers[q.id] === q.correct ? 'border-green-500' : 'border-red-500'
+                                                }`}>
+                                                    <div className="flex items-start gap-3 mb-3">
+                                                        {quizAnswers[q.id] === q.correct ? (
+                                                            <i data-lucide="check-circle" className="w-6 h-6 text-green-500 flex-shrink-0"></i>
+                                                        ) : (
+                                                            <span className="text-2xl">❌</span>
+                                                        )}
+                                                        <div className="flex-1">
+                                                            <h5 className="font-bold mb-2">{q.question}</h5>
+                                                            <p className={`text-sm mb-2 ${
+                                                                quizAnswers[q.id] === q.correct ? 'text-green-700' : 'text-red-700'
+                                                            }`}>
+                                                                Tu respuesta: {q.options[quizAnswers[q.id]]}
+                                                            </p>
+                                                            {quizAnswers[q.id] !== q.correct && (
+                                                                <p className="text-sm text-green-700 font-semibold mb-2">
+                                                                    Respuesta correcta: {q.options[q.correct]}
+                                                                </p>
+                                                            )}
+                                                            <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded">
+                                                                💡 {q.explanation}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+
+                                            <button
+                                                onClick={() => {
+                                                    setShowResults(false);
+                                                    setQuizAnswers({});
+                                                    setGameScore(0);
+                                                }}
+                                                className="w-full bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg font-semibold transition-colors"
+                                            >
+                                                Intentar de nuevo 🔄
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Actividad de emparejamiento */}
+                                <div className="bg-blue-50 rounded-xl p-6 border-2 border-blue-200">
+                                    <h3 className="text-2xl font-bold mb-4 text-blue-700">🎯 Empareja Estrategia con Ejemplo</h3>
+                                    <p className="mb-4 text-gray-700">¡Próximamente! Más juegos interactivos en desarrollo...</p>
+                                    <div className="grid md:grid-cols-2 gap-4">
+                                        <div className="bg-white rounded-lg p-4 border-2 border-dashed border-blue-300">
+                                            <p className="font-bold text-blue-600">Memoria Visual</p>
+                                            <p className="text-sm text-gray-600 mt-2">Encuentra pares de estrategias</p>
+                                        </div>
+                                        <div className="bg-white rounded-lg p-4 border-2 border-dashed border-blue-300">
+                                            <p className="font-bold text-blue-600">Ordenar Secuencias</p>
+                                            <p className="text-sm text-gray-600 mt-2">Organiza pasos de actividades</p>
+                                        </div>
+                                        <div className="bg-white rounded-lg p-4 border-2 border-dashed border-blue-300">
+                                            <p className="font-bold text-blue-600">Casos de Estudio</p>
+                                            <p className="text-sm text-gray-600 mt-2">Resuelve situaciones reales</p>
+                                        </div>
+                                        <div className="bg-white rounded-lg p-4 border-2 border-dashed border-blue-300">
+                                            <p className="font-bold text-blue-600">Simulador de Aula</p>
+                                            <p className="text-sm text-gray-600 mt-2">Practica respuestas apropiadas</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {completedActivities.includes('quiz') && (
+                                    <div className="bg-green-50 rounded-xl p-6 border-2 border-green-200 text-center">
+                                        <i data-lucide="award" className="w-16 h-16 mx-auto mb-3 text-green-500"></i>
+                                        <h3 className="text-2xl font-bold text-green-700 mb-2">
+                                            ¡Felicidades! 🎉
+                                        </h3>
+                                        <p className="text-gray-700">
+                                            Has completado exitosamente el quiz. ¡Continúa explorando!
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        );
+
+                    case 'practica':
+                        return (
+                            <div className="space-y-6">
+                                <div className="bg-gradient-to-r from-teal-100 to-teal-50 rounded-2xl p-8">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <i data-lucide="lightbulb" className="w-12 h-12 text-teal-600"></i>
+                                        <h2 className="text-3xl font-bold text-gray-800">
+                                            Aplica en tu Clase - Ideas Prácticas
+                                        </h2>
+                                    </div>
+                                    <p className="text-lg text-gray-700">
+                                        Actividades listas para implementar mañana mismo
+                                    </p>
+                                </div>
+
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    {/* Actividad 1 */}
+                                    <div className="bg-purple-50 rounded-xl p-6 border-2 border-purple-200">
+                                        <div className="flex items-start gap-3 mb-4">
+                                            <div className="bg-purple-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">
+                                                1
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-xl font-bold mb-2 text-purple-700">
+                                                    Crear un Horario Visual
+                                                </h3>
+                                                <p className="text-sm text-gray-700 mb-3">
+                                                    Tiempo: 30 minutos | Materiales: Fotos, velcro, cartulina
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2 mb-4">
+                                            <p className="font-semibold text-purple-600">Pasos:</p>
+                                            <div className="bg-white rounded-lg p-3 space-y-2 text-sm">
+                                                <p>✓ Toma fotos de cada actividad del día</p>
+                                                <p>✓ Imprime y plastifica las imágenes</p>
+                                                <p>✓ Coloca velcro en el reverso</p>
+                                                <p>✓ Crea un tablero con la secuencia diaria</p>
+                                                <p>✓ Permite al estudiante quitar cada actividad al completarla</p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => markActivityComplete('horario-visual')}
+                                            className="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 rounded-lg text-sm font-semibold transition-colors"
+                                        >
+                                            ¡Implementé esta actividad! ✓
+                                        </button>
+                                    </div>
+
+                                    {/* Actividad 2 */}
+                                    <div className="bg-pink-50 rounded-xl p-6 border-2 border-pink-200">
+                                        <div className="flex items-start gap-3 mb-4">
+                                            <div className="bg-pink-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">
+                                                2
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-xl font-bold mb-2 text-pink-700">
+                                                    Historia Social: Pedir Ayuda
+                                                </h3>
+                                                <p className="text-sm text-gray-700 mb-3">
+                                                    Tiempo: 20 minutos | Materiales: Papel, marcadores
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2 mb-4">
+                                            <p className="font-semibold text-pink-600">Ejemplo de historia:</p>
+                                            <div className="bg-white rounded-lg p-3 space-y-2 text-sm">
+                                                <p>📖 "Cuando necesito ayuda, levanto mi mano."</p>
+                                                <p>🙋 "Espero a que mi maestra me mire."</p>
+                                                <p>💬 "Digo: 'Ayuda, por favor'."</p>
+                                                <p>😊 "Mi maestra me ayuda y me siento bien."</p>
+                                                <p>⭐ "¡Pedir ayuda es inteligente!"</p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => markActivityComplete('historia-social')}
+                                            className="w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg text-sm font-semibold transition-colors"
+                                        >
+                                            ¡Implementé esta actividad! ✓
+                                        </button>
+                                    </div>
+
+                                    {/* Actividad 3 */}
+                                    <div className="bg-blue-50 rounded-xl p-6 border-2 border-blue-200">
+                                        <div className="flex items-start gap-3 mb-4">
+                                            <div className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">
+                                                3
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-xl font-bold mb-2 text-blue-700">
+                                                    Estación Sensorial
+                                                </h3>
+                                                <p className="text-sm text-gray-700 mb-3">
+                                                    Tiempo: 15 minutos | Materiales: Variados
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2 mb-4">
+                                            <p className="font-semibold text-blue-600">Materiales sugeridos:</p>
+                                            <div className="bg-white rounded-lg p-3 space-y-2 text-sm">
+                                                <p>🎈 Cojines y almohadas suaves</p>
+                                                <p>💡 Lámpara con luz tenue</p>
+                                                <p>🎧 Auriculares con cancelación de ruido</p>
+                                                <p>🧸 Peluches con texturas</p>
+                                                <p>🌀 Spinners o juguetes fidget</p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => markActivityComplete('estacion-sensorial')}
+                                            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg text-sm font-semibold transition-colors"
+                                        >
+                                            ¡Implementé esta actividad! ✓
+                                        </button>
+                                    </div>
+
+                                    {/* Actividad 4 */}
+                                    <div className="bg-green-50 rounded-xl p-6 border-2 border-green-200">
+                                        <div className="flex items-start gap-3 mb-4">
+                                            <div className="bg-green-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">
+                                                4
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-xl font-bold mb-2 text-green-700">
+                                                    Sistema de Recompensas
+                                                </h3>
+                                                <p className="text-sm text-gray-700 mb-3">
+                                                    Tiempo: 10 minutos | Materiales: Stickers, tabla
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2 mb-4">
+                                            <p className="font-semibold text-green-600">Cómo implementar:</p>
+                                            <div className="bg-white rounded-lg p-3 space-y-2 text-sm">
+                                                <p>⭐ Define 3 comportamientos objetivo claros</p>
+                                                <p>🎯 Usa imágenes para cada comportamiento</p>
+                                                <p>✅ Coloca una estrella por cada logro</p>
+                                                <p>🏆 5 estrellas = Actividad preferida</p>
+                                                <p>📊 Celebra inmediatamente cada logro</p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => markActivityComplete('recompensas')}
+                                            className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg text-sm font-semibold transition-colors"
+                                        >
+                                            ¡Implementé esta actividad! ✓
+                                        </button>
+                                    </div>
+
+                                    {/* Actividad 5 */}
+                                    <div className="bg-yellow-50 rounded-xl p-6 border-2 border-yellow-200">
+                                        <div className="flex items-start gap-3 mb-4">
+                                            <div className="bg-yellow-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">
+                                                5
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-xl font-bold mb-2 text-yellow-700">
+                                                    App de Comunicación
+                                                </h3>
+                                                <p className="text-sm text-gray-700 mb-3">
+                                                    Tiempo: 30 minutos | Materiales: Tablet
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2 mb-4">
+                                            <p className="font-semibold text-yellow-600">Apps recomendadas:</p>
+                                            <div className="bg-white rounded-lg p-3 space-y-2 text-sm">
+                                                <p>📱 Proloquo2Go (comunicación AAC)</p>
+                                                <p>🗣️ TouchChat (tablero personalizable)</p>
+                                                <p>🎨 LAMP Words for Life (lenguaje motor)</p>
+                                                <p>🖼️ Pictogram Agenda (horarios visuales)</p>
+                                                <p>💬 LetMe Talk (comunicación gratuita)</p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => markActivityComplete('app-comunicacion')}
+                                            className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg text-sm font-semibold transition-colors"
+                                        >
+                                            ¡Implementé esta actividad! ✓
+                                        </button>
+                                    </div>
+
+                                    {/* Actividad 6 */}
+                                    <div className="bg-teal-50 rounded-xl p-6 border-2 border-teal-200">
+                                        <div className="flex items-start gap-3 mb-4">
+                                            <div className="bg-teal-500 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">
+                                                6
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-xl font-bold mb-2 text-teal-700">
+                                                    Lección con IA
+                                                </h3>
+                                                <p className="text-sm text-gray-700 mb-3">
+                                                    Tiempo: 45 minutos | Materiales: Computadora
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2 mb-4">
+                                            <p className="font-semibold text-teal-600">Usa ChatGPT/Claude para:</p>
+                                            <div className="bg-white rounded-lg p-3 space-y-2 text-sm">
+                                                <p>🎓 Adaptar textos al nivel del estudiante</p>
+                                                <p>📚 Generar ejercicios personalizados</p>
+                                                <p>🎨 Crear materiales visuales</p>
+                                                <p>📖 Escribir historias sociales específicas</p>
+                                                <p>✏️ Diseñar actividades multisensoriales</p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => markActivityComplete('leccion-ia')}
+                                            className="w-full bg-teal-500 hover:bg-teal-600 text-white py-2 rounded-lg text-sm font-semibold transition-colors"
+                                        >
+                                            ¡Implementé esta actividad! ✓
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="bg-purple-50 rounded-xl p-6 border-2 border-purple-200">
+                                    <h3 className="text-xl font-bold mb-4 text-purple-700 flex items-center gap-2">
+                                        <i data-lucide="users" className="w-6 h-6"></i>
+                                        Colaboración con la Familia
+                                    </h3>
+                                    <div className="space-y-3">
+                                        <p className="text-gray-700">
+                                            Recuerda que la familia es tu mejor aliado. Comparte estas estrategias:
+                                        </p>
+                                        <div className="grid md:grid-cols-2 gap-3">
+                                            <div className="bg-white rounded-lg p-4">
+                                                <p className="font-semibold mb-1">📧 Comunicación Diaria</p>
+                                                <p className="text-sm text-gray-600">Usa una libreta o app para compartir logros y retos</p>
+                                            </div>
+                                            <div className="bg-white rounded-lg p-4">
+                                                <p className="font-semibold mb-1">🏠 Continuidad en Casa</p>
+                                                <p className="text-sm text-gray-600">Provee materiales para practicar las mismas estrategias</p>
+                                            </div>
+                                            <div className="bg-white rounded-lg p-4">
+                                                <p className="font-semibold mb-1">🤝 Reuniones Regulares</p>
+                                                <p className="text-sm text-gray-600">Agenda encuentros mensuales para ajustar el PEI</p>
+                                            </div>
+                                            <div className="bg-white rounded-lg p-4">
+                                                <p className="font-semibold mb-1">📹 Videos de Progreso</p>
+                                                <p className="text-sm text-gray-600">Comparte clips cortos celebrando logros</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {completedActivities.filter(a => ['horario-visual', 'historia-social', 'estacion-sensorial', 'recompensas', 'app-comunicacion', 'leccion-ia'].includes(a)).length >= 3 && (
+                                    <div className="bg-gradient-to-r from-yellow-100 to-pink-100 rounded-xl p-8 text-center border-2 border-yellow-300">
+                                        <i data-lucide="trophy" className="w-20 h-20 mx-auto mb-4 text-yellow-500"></i>
+                                        <h3 className="text-3xl font-bold text-gray-800 mb-3">
+                                            ¡Eres un Maestro Estrella! ⭐
+                                        </h3>
+                                        <p className="text-lg text-gray-700 mb-4">
+                                            Has implementado múltiples estrategias. ¡Estás transformando vidas!
+                                        </p>
+                                        <div className="flex justify-center gap-4">
+                                            <i data-lucide="zap" className="w-8 h-8 text-yellow-500"></i>
+                                            <i data-lucide="heart" className="w-8 h-8 text-pink-500"></i>
+                                            <i data-lucide="star" className="w-8 h-8 text-purple-500"></i>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        );
+
+                    default:
+                        return null;
+                }
+            };
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+                    <div className="flex">
+                        {/* Sidebar */}
+                        <div className="w-64 bg-white shadow-xl min-h-screen p-6">
+                            <div className="mb-8">
+                                <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-2">
+                                    Capacitación Docente
+                                </h1>
+                                <p className="text-sm text-gray-600">Autismo & IA - Puerto Rico</p>
+                            </div>
+
+                            <nav className="space-y-2">
+                                {sections.map((section) => (
+                                    <button
+                                        key={section.id}
+                                        onClick={() => setActiveSection(section.id)}
+                                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
+                                            activeSection === section.id
+                                                ? 'bg-gradient-to-r from-purple-100 to-pink-100 shadow-md'
+                                                : 'hover:bg-gray-50'
+                                        }`}
+                                    >
+                                        <i data-lucide={section.icon} className={`w-5 h-5 ${section.color}`}></i>
+                                        <span className={`text-sm font-medium ${
+                                            activeSection === section.id ? 'text-gray-800' : 'text-gray-600'
+                                        }`}>
+                                            {section.name}
+                                        </span>
+                                    </button>
+                                ))}
+                            </nav>
+
+                            <div className="mt-8 pt-6 border-t border-gray-200">
+                                <div className="bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg p-4">
+                                    <p className="text-xs font-semibold text-gray-700 mb-2">Tu Progreso Global</p>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <i data-lucide="trophy" className="w-5 h-5 text-yellow-500"></i>
+                                        <span className="text-lg font-bold text-gray-800">{completedActivities.length}</span>
+                                    </div>
+                                    <p className="text-xs text-gray-600">actividades completadas</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Main Content */}
+                        <div className="flex-1 p-8">
+                            <div className="max-w-5xl mx-auto">
+                                {renderContent()}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Renderizar la aplicación
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<CapacitacionDocenteAutismo />);
+
+        // Inicializar iconos después del primer render
+        setTimeout(() => {
+            lucide.createIcons();
+        }, 100);
+    </script>
+</body>
+</html>
